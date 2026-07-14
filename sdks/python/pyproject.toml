@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tracelink"
-version = "0.6.3"
+version = "0.6.4"
 description = "Python SDK for TraceLink local tracing and cross-service context propagation"
 readme = "README.md"
 license = { text = "MIT" }

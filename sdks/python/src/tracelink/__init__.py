@@ -47,7 +47,7 @@ if TYPE_CHECKING:
     # 'starlette' dependency (the fastapi extra).
     from .extensions.frameworks.fastapi import TraceMiddleware as TraceMiddleware
 
-__version__ = "0.6.3"
+__version__ = "0.6.4"
 
 __all__ = [
     "Tracer",

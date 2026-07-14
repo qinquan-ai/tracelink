@@ -2,6 +2,12 @@
 
 This changelog starts with TraceLink's first public release. Development-only package names and unpublished iteration history are intentionally omitted.
 
+## 0.6.4 - 2026-07-15
+
+- Localized the Dashboard About panel for Chinese users.
+- Added a project-support entry without replacing the existing issue-feedback path.
+- Routed sponsorship through the stable blog support page so provider changes do not require a TraceLink release.
+
 ## 0.6.3 - 2026-07-15
 
 - Separated the product version from the wire-protocol generation across the SDKs and Receiver.
