@@ -1,0 +1,2 @@
+{"ts":"[09:41:02.204]","layer":"BE-ENTRY","fn":"routes/work.py:delete_work","msg":"DELETE /api/work/2481","level":"info","data":{"workId":"w_2481"},"traceId":"tl_delete_work_7f3a9c","spanId":"2","scope":"delete-work","parentSpanId":"1"}
+{"ts":"[09:41:02.246]","layer":"BE-ENTRY","fn":"routes/work.py:delete_work","msg":"DELETE /api/work/2481","level":"info","data":{"workId":"w_2481"},"traceId":"tl_delete_work_7f3a9c","spanId":"2","scope":"delete-work","parentSpanId":"1","durationMs":42,"async":true}

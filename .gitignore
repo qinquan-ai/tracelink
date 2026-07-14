@@ -28,6 +28,7 @@ sdks/python/*.egg-info/
 .tracelink/
 *.log
 *.ndjson
+!protocol/fixtures/*.ndjson
 
 # IDE config files
 .idea/
@@ -41,3 +42,7 @@ sdks/python/*.egg-info/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Python Egg Info
+*.egg-info/
+

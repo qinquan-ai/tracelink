@@ -1,0 +1,1 @@
+{"ts":"[09:41:02.198]","layer":"BE-ENTRY","fn":"routes/work.py:delete_work","msg":"DELETE /api/work/2481 rejected","level":"warn","data":{"workId":"w_2481","reason":"insufficient permission: role=viewer requires role>=editor"},"traceId":"tl_delete_work_7f3a9c","spanId":"2","scope":"delete-work","userId":"u_88","parentSpanId":"1","outcome":"blocked"}

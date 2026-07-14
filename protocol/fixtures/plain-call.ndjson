@@ -1,0 +1,1 @@
+{"ts":"[09:41:02.117]","layer":"FE-ACTION","fn":"DeleteButton.tsx:onClick","msg":"user clicked delete","level":"info","data":{"workId":"w_2481"},"traceId":"tl_delete_work_7f3a9c","spanId":"1","scope":"delete-work"}
