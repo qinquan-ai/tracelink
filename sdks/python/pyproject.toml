@@ -1,0 +1,74 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tracelink"
+version = "0.6.1"
+description = "Python SDK for TraceLink local tracing and cross-service context propagation"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [
+    { name = "qinquan-ai", email = "qin16778@gmail.com" },
+]
+keywords = ["tracing", "debug", "logging", "ndjson", "skill", "ai-agent", "scope", "fastapi", "starlette"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: System :: Logging",
+]
+dependencies = [
+    # Intentionally empty — the base SDK uses only stdlib.
+    # FastAPI/Starlette are peer deps so users can choose their version.
+]
+
+[project.optional-dependencies]
+fastapi = ["starlette>=0.27"]
+dev = [
+    "pytest>=7.4",
+    "pytest-asyncio>=0.21",
+    "ruff>=0.1.0",
+    "mypy>=1.7",
+]
+
+[project.urls]
+Homepage = "https://github.com/qinquan-ai/tracelink"
+Documentation = "https://github.com/qinquan-ai/tracelink#readme"
+Issues = "https://github.com/qinquan-ai/tracelink/issues"
+Changelog = "https://github.com/qinquan-ai/tracelink/blob/main/CHANGELOG.md"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["tracelink*"]
+exclude = ["tests*", "examples*"]
+
+[tool.setuptools.package-data]
+tracelink = ["py.typed"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "N", "ASYNC"]
+ignore = ["E501"]  # line-length handled by formatter
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+pythonpath = ["src"]

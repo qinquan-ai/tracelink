@@ -1,0 +1,43 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+web_modules/
+
+# Build outputs
+dist/
+build/
+.tsup/
+*.gemini/
+
+# Python virtualenv and caches
+.venv/
+venv/
+ENV/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+sdks/python/dist/
+sdks/python/build/
+sdks/python/*.egg-info/
+
+# Debug and local database log files
+.tracelink/
+*.log
+*.ndjson
+
+# IDE config files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db

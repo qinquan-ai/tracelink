@@ -1,0 +1,105 @@
+{
+  "name": "tracelink",
+  "version": "0.6.1",
+  "description": "Dev-time tracing toolkit with JavaScript SDK profiles, a local Receiver, and an embedded Dashboard",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./browser": {
+      "types": "./dist/browser.d.ts",
+      "import": "./dist/browser.js"
+    },
+    "./browser/auto-click": {
+      "types": "./dist/auto-click.d.ts",
+      "import": "./dist/auto-click.js"
+    },
+    "./node": {
+      "types": "./dist/node.d.ts",
+      "import": "./dist/node.js"
+    },
+    "./receiver/http": {
+      "types": "./dist/receiver/http.d.ts",
+      "import": "./dist/receiver/http.js"
+    },
+    "./receiver/vite": {
+      "types": "./dist/receiver/vite.d.ts",
+      "import": "./dist/receiver/vite.js"
+    },
+    "./protocol/trace-log.schema.json": "./protocol/schema/trace-log.schema.json",
+    "./protocol/scope-policy.schema.json": "./protocol/schema/scope-policy.schema.json"
+  },
+  "bin": {
+    "tracelink": "cli/tracelink.mjs"
+  },
+  "files": [
+    "dist",
+    "cli",
+    "dashboard",
+    "protocol/CONFORMANCE.md",
+    "protocol/schema",
+    "protocol/fixtures",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "verify:javascript": "npm test && npm run build && node scripts/verify-js-package.mjs",
+    "test:python": "cd sdks/python && python -m pytest -q",
+    "lint:python": "cd sdks/python && python -m ruff check src/tracelink tests && python -m mypy src/tracelink",
+    "verify:python": "npm run test:python && npm run lint:python && node scripts/verify-python-package.mjs",
+    "verify": "npm run verify:javascript && npm run verify:python",
+    "embed:dashboard": "node scripts/embed-dashboard.mjs",
+    "clean": "rimraf dist .turbo",
+    "prepack": "node scripts/pack-readme.mjs prepack",
+    "postpack": "node scripts/pack-readme.mjs postpack"
+  },
+  "peerDependencies": {
+    "vite": ">=4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "vite": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "rimraf": "^5.0.5",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vite": "^5.0.0",
+    "vitest": "^1.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "tracing",
+    "debug",
+    "logging",
+    "ndjson",
+    "skill",
+    "ai-agent",
+    "scope",
+    "browser",
+    "node",
+    "vite"
+  ],
+  "author": "qinquan-ai <qin16778@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qinquan-ai/tracelink.git"
+  },
+  "homepage": "https://github.com/qinquan-ai/tracelink#readme",
+  "bugs": {
+    "url": "https://github.com/qinquan-ai/tracelink/issues"
+  }
+}

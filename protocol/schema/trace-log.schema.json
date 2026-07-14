@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tracelink:schema:trace-log",
+  "title": "TraceLink TraceLog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["ts", "layer", "fn", "msg", "data", "traceId", "spanId"],
+  "properties": {
+    "ts": {
+      "type": "string",
+      "pattern": "^\\[\\d{2}:\\d{2}:\\d{2}\\.\\d{3}\\]$"
+    },
+    "layer": {
+      "type": "string",
+      "pattern": "^(FE|BE|X)-.+$"
+    },
+    "fn": { "type": "string", "minLength": 1 },
+    "msg": { "type": "string" },
+    "level": { "enum": ["debug", "info", "warn", "error"] },
+    "outcome": { "enum": ["call", "blocked", "intent"] },
+    "data": { "type": "object" },
+    "traceId": { "type": "string", "minLength": 1 },
+    "spanId": { "type": "string", "minLength": 1 },
+    "scope": { "type": "string", "minLength": 1 },
+    "userId": { "type": "string" },
+    "parentSpanId": { "type": "string", "minLength": 1 },
+    "durationMs": { "type": "number", "minimum": 0 },
+    "async": { "type": "boolean" }
+  }
+}
