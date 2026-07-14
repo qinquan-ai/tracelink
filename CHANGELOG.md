@@ -2,6 +2,15 @@
 
 This changelog starts with TraceLink's first public release. Development-only package names and unpublished iteration history are intentionally omitted.
 
+## 0.6.2 - 2026-07-15
+
+First installable public release from the clean `qinquan-ai/tracelink` repository.
+
+- Restored protocol fixture files required by fresh-clone and GitHub Actions verification.
+- Hardened private-to-public allowlist synchronization and release validation.
+- Added public CI for JavaScript, Python, package, and production-dependency checks.
+- Aligned the Dashboard's displayed Receiver protocol version with the Receiver response header.
+
 ## Initial Public Release
 
 ### SDK And Protocol
