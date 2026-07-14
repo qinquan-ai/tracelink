@@ -1,11 +1,13 @@
 import http from 'node:http';
+import { isTraceProtocolCompatible } from '../../../protocol/version.js';
 import {
   createReceiverHandler,
   ReceiverOptions,
   RECEIVER_VERSION,
+  TRACE_PROTOCOL_VERSION,
 } from '../../service/handler.js';
 
-export { createReceiverHandler, RECEIVER_VERSION };
+export { createReceiverHandler, RECEIVER_VERSION, TRACE_PROTOCOL_VERSION };
 export type { ReceiverOptions };
 
 export interface ReceiverServerOptions extends ReceiverOptions {
@@ -24,21 +26,33 @@ export interface ReceiverServerOptions extends ReceiverOptions {
 /** Local-only graceful shutdown endpoint (used by `force` restarts). */
 const SHUTDOWN_PATH = '/__tracelink/shutdown';
 
-/** HEAD/GET a candidate port to see if a TraceLink receiver is behind it. */
-function probeReceiver(port: number, host: string, timeoutMs = 500): Promise<boolean> {
+type ReceiverProbe =
+  | { kind: 'foreign' }
+  | { kind: 'compatible'; version: string }
+  | { kind: 'incompatible'; version: string };
+
+/** GET a candidate port and identify its TraceLink protocol generation. */
+function probeReceiver(port: number, host: string, timeoutMs = 500): Promise<ReceiverProbe> {
   return new Promise((resolve) => {
     const req = http.request(
       { host, port, method: 'GET', path: '/__debug_log/scopes', timeout: timeoutMs },
       (res) => {
-        const isOurs = typeof res.headers['x-tracelink-receiver'] === 'string';
+        const header = res.headers['x-tracelink-receiver'];
+        const version = Array.isArray(header) ? header[0] : header;
         res.resume();
-        resolve(isOurs);
+        if (!version) {
+          resolve({ kind: 'foreign' });
+        } else if (isTraceProtocolCompatible(version)) {
+          resolve({ kind: 'compatible', version });
+        } else {
+          resolve({ kind: 'incompatible', version });
+        }
       },
     );
-    req.on('error', () => resolve(false));
+    req.on('error', () => resolve({ kind: 'foreign' }));
     req.on('timeout', () => {
       req.destroy();
-      resolve(false);
+      resolve({ kind: 'foreign' });
     });
     req.end();
   });
@@ -88,7 +102,7 @@ export function startReceiverServer(options: ReceiverServerOptions = {}): http.S
   const server = http.createServer(async (req, res) => {
     // Local-only graceful shutdown hook (used by force restarts).
     if (req.method === 'POST' && req.url === SHUTDOWN_PATH) {
-      res.setHeader('x-tracelink-receiver', RECEIVER_VERSION);
+      res.setHeader('x-tracelink-receiver', TRACE_PROTOCOL_VERSION);
       res.statusCode = 204;
       res.end();
       // Close after the response has been flushed.
@@ -119,8 +133,8 @@ export function startReceiverServer(options: ReceiverServerOptions = {}): http.S
       throw err;
     }
     void (async () => {
-      const isOurs = await probeReceiver(port, host);
-      if (!isOurs) {
+      const probe = await probeReceiver(port, host);
+      if (probe.kind === 'foreign') {
         const msg =
           `[TraceLink] Port ${port} is already in use by a non-TraceLink process. ` +
           `TraceLink will not kill it. Free the port, or pass a different one via ` +
@@ -128,9 +142,18 @@ export function startReceiverServer(options: ReceiverServerOptions = {}): http.S
         console.error(msg);
         throw new Error(msg);
       }
+      if (probe.kind === 'incompatible' && !options.force) {
+        console.error(
+          `[TraceLink] Port ${port} is held by TraceLink protocol ${probe.version}, ` +
+          `but this release requires protocol ${TRACE_PROTOCOL_VERSION}. ` +
+          `Use { force: true } to replace it, or choose another port.`,
+        );
+        return;
+      }
       if (options.force) {
         console.log(
-          `[TraceLink] Port ${port} held by another TraceLink receiver; force restart requested — asking it to shut down...`,
+          `[TraceLink] Port ${port} held by TraceLink protocol ${probe.version}; ` +
+          `force restart requested — asking it to shut down...`,
         );
         await requestShutdown(port, host);
         await delay(300);
@@ -138,7 +161,8 @@ export function startReceiverServer(options: ReceiverServerOptions = {}): http.S
         return;
       }
       console.log(
-        `[TraceLink] A TraceLink receiver is already running at http://${host}:${port}/__debug_log — reusing it (pass { force: true } to restart).`,
+        `[TraceLink] A compatible TraceLink protocol ${probe.version} receiver is already running ` +
+        `at http://${host}:${port}/__debug_log — reusing it (pass { force: true } to restart).`,
       );
     })();
   };

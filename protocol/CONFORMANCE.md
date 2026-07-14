@@ -171,9 +171,13 @@ policy and reconnect; fixed-interval polling is not required.
 | `GET` | `/__debug_log/scopes/stream` | Scope policy SSE |
 | `GET` | `/__debug_log/ui` | embedded Dashboard |
 
-Every owned response carries `x-tracelink-receiver: <protocol-version>` and CORS
-headers. Allowed request headers include `content-type`, `x-trace-id`,
-`x-parent-span-id`, and `x-debug-scopes`.
+Every owned response carries `x-tracelink-receiver: 1` and CORS headers. The
+value is a wire-protocol generation, not a package or Receiver release version;
+it changes only for wire-incompatible contracts. Historical header values
+`0.4.0` and `0.5.0` are compatibility aliases for generation `1`; the wire
+contract did not break when the numbering scheme changed. Allowed request
+headers include `content-type`, `x-trace-id`, `x-parent-span-id`, and
+`x-debug-scopes`.
 
 The standalone host defaults to `127.0.0.1:5174`. The endpoint is configurable.
 It MUST NOT silently select a new port because SDKs and Dashboard would diverge.

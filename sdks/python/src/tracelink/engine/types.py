@@ -3,6 +3,9 @@
 import re
 from typing import Any, Literal, TypedDict
 
+TRACE_PROTOCOL_VERSION = "1"
+TRACE_PROTOCOL_COMPATIBLE_VERSIONS = ("1", "0.5.0", "0.4.0")
+
 # ---------------------------------------------------------------------------
 # Built-in layers are shared by every SDK through the protocol. Custom layers use X-*.
 # ---------------------------------------------------------------------------

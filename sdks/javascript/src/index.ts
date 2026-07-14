@@ -59,3 +59,8 @@ export type { CurrentTraceHeadersOptions } from './transport/propagators/current
 
 export { sanitize, sanitizeData } from './engine/sanitize.js';
 export { formatTs, makeTraceId, makeSpanId, now } from './engine/time.js';
+export {
+  TRACE_PROTOCOL_COMPATIBLE_VERSIONS,
+  TRACE_PROTOCOL_VERSION,
+  isTraceProtocolCompatible,
+} from '../../../protocol/version.js';

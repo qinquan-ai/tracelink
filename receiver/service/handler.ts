@@ -3,6 +3,7 @@ import { promises as fs, existsSync, mkdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { URL, fileURLToPath } from 'node:url';
 import type { TraceLog } from '../../protocol/types.js';
+import { TRACE_PROTOCOL_VERSION } from '../../protocol/version.js';
 import { sanitizeData } from '../../protocol/sanitize.js';
 
 /**
@@ -42,12 +43,14 @@ const DASHBOARD_HTML_PATH = path.join(
 );
 
 /**
- * Receiver protocol version. Sent on every response as `x-tracelink-receiver`
+ * Protocol generation. Sent on every response as `x-tracelink-receiver`
  * so peers (dashboards, other receivers) can identify a TraceLink server and
  * so `startReceiverServer` can tell "one of us" apart from a foreign process
  * holding the port.
  */
-export const RECEIVER_VERSION = '0.5.0';
+export { TRACE_PROTOCOL_VERSION };
+/** @deprecated Use TRACE_PROTOCOL_VERSION. */
+export const RECEIVER_VERSION = TRACE_PROTOCOL_VERSION;
 
 export interface ReceiverOptions {
   /** Override project root (default: process.cwd()). Logs live in `<dir>/<subdir>`. */
@@ -194,7 +197,7 @@ export function createReceiverHandler(options: ReceiverOptions = {}) {
       'Access-Control-Allow-Headers',
       'content-type, x-trace-id, x-parent-span-id, x-debug-scopes',
     );
-    res.setHeader('x-tracelink-receiver', RECEIVER_VERSION);
+    res.setHeader('x-tracelink-receiver', TRACE_PROTOCOL_VERSION);
   }
 
   /** Fan a freshly-written log out to all live SSE subscribers. */

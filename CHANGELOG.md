@@ -2,6 +2,13 @@
 
 This changelog starts with TraceLink's first public release. Development-only package names and unpublished iteration history are intentionally omitted.
 
+## 0.6.3 - 2026-07-15
+
+- Separated the product version from the wire-protocol generation across the SDKs and Receiver.
+- Kept Receiver headers `0.4.0` and `0.5.0` as compatible aliases for protocol generation `1`.
+- Removed the internal protocol generation from the Dashboard About panel and rejected incompatible Receiver reuse.
+- Updated the Dashboard blog link and added GitHub-to-Gitee public release mirroring.
+
 ## 0.6.2 - 2026-07-15
 
 First installable public release from the clean `qinquan-ai/tracelink` repository.

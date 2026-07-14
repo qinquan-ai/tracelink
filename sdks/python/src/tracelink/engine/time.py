@@ -11,6 +11,11 @@ def now_ms() -> int:
     return int(time.time() * 1000)
 
 
+def monotonic_ms() -> int:
+    """Return a monotonic millisecond clock for elapsed-time measurements."""
+    return time.perf_counter_ns() // 1_000_000
+
+
 def format_ts(ts: int | None = None) -> str:
     if ts is None:
         ts = now_ms()

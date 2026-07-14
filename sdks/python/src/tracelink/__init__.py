@@ -21,6 +21,8 @@ from typing import TYPE_CHECKING, Any
 from .engine.tracer import TraceExporter, Tracer, tracer
 from .engine.types import (
     BUILTIN_LAYERS,
+    TRACE_PROTOCOL_COMPATIBLE_VERSIONS,
+    TRACE_PROTOCOL_VERSION,
     LogLevel,
     Outcome,
     TraceLayer,
@@ -45,7 +47,7 @@ if TYPE_CHECKING:
     # 'starlette' dependency (the fastapi extra).
     from .extensions.frameworks.fastapi import TraceMiddleware as TraceMiddleware
 
-__version__ = "0.6.2"
+__version__ = "0.6.3"
 
 __all__ = [
     "Tracer",
@@ -61,6 +63,8 @@ __all__ = [
     "TraceLog",
     "LogLevel",
     "Outcome",
+    "TRACE_PROTOCOL_COMPATIBLE_VERSIONS",
+    "TRACE_PROTOCOL_VERSION",
     "TraceOutcome",
     "SpanContext",
     "current_span",

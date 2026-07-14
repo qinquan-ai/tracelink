@@ -1,9 +1,13 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { promises as fs, existsSync, rmSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import http from 'node:http';
-import { createReceiverHandler, RECEIVER_VERSION } from '../service/handler.js';
+import {
+  createReceiverHandler,
+  RECEIVER_VERSION,
+  TRACE_PROTOCOL_VERSION,
+} from '../service/handler.js';
 import { startReceiverServer } from '../hosts/http/index.js';
 import type { TraceLog } from '../../protocol/types.js';
 
@@ -30,16 +34,18 @@ async function waitFor(pred: () => boolean, timeoutMs = 1500): Promise<void> {
   }
 }
 
-function randomPort(): number {
-  return 10_000 + Math.floor(Math.random() * 20_000);
-}
-
 function waitListening(server: http.Server): Promise<void> {
   return new Promise((resolve, reject) => {
     if (server.listening) return resolve();
     server.once('listening', () => resolve());
     server.once('error', reject);
   });
+}
+
+function listeningPort(server: http.Server): number {
+  const address = server.address();
+  if (!address || typeof address === 'string') throw new Error('server has no TCP listening port');
+  return address.port;
 }
 
 /** Minimal in-process request helper that drives the handler directly. */
@@ -158,7 +164,8 @@ describe('createReceiverHandler', () => {
     expect(res.headers['access-control-allow-methods']).toContain('OPTIONS');
     expect(res.headers['access-control-allow-headers']).toContain('x-debug-scopes');
     expect(res.headers['access-control-allow-headers']).toContain('x-parent-span-id');
-    expect(res.headers['x-tracelink-receiver']).toBe(RECEIVER_VERSION);
+    expect(res.headers['x-tracelink-receiver']).toBe(TRACE_PROTOCOL_VERSION);
+    expect(RECEIVER_VERSION).toBe(TRACE_PROTOCOL_VERSION);
   });
 
   it('OPTIONS preflight returns 204 with CORS headers', async () => {
@@ -312,9 +319,9 @@ describe('startReceiverServer', () => {
   });
 
   it('listens, accepts a POST, writes the file, and closes', async () => {
-    const port = randomPort();
-    server = startReceiverServer({ dir, port, host: '127.0.0.1' });
+    server = startReceiverServer({ dir, port: 0, host: '127.0.0.1' });
     await waitListening(server);
+    const port = listeningPort(server);
 
     const log = makeLog({ msg: 'via-server' });
     const postRes = await fetch(`http://127.0.0.1:${port}/__debug_log`, {
@@ -323,7 +330,7 @@ describe('startReceiverServer', () => {
       body: JSON.stringify(log),
     });
     expect(postRes.status).toBe(204);
-    expect(postRes.headers.get('x-tracelink-receiver')).toBe(RECEIVER_VERSION);
+    expect(postRes.headers.get('x-tracelink-receiver')).toBe(TRACE_PROTOCOL_VERSION);
 
     const ndjsonPath = path.join(dir, '.tracelink', 'trace.ndjson');
     const content = await fs.readFile(ndjsonPath, 'utf-8');
@@ -335,9 +342,9 @@ describe('startReceiverServer', () => {
   });
 
   it('SSE /stream pushes newly POSTed logs to a live subscriber', async () => {
-    const port = randomPort();
-    server = startReceiverServer({ dir, port, host: '127.0.0.1' });
+    server = startReceiverServer({ dir, port: 0, host: '127.0.0.1' });
     await waitListening(server);
+    const port = listeningPort(server);
 
     const received: string[] = [];
     const sseReq = http.request(
@@ -367,9 +374,9 @@ describe('startReceiverServer', () => {
   });
 
   it('SSE /scopes/stream sends the current policy and pushes updates', async () => {
-    const port = randomPort();
-    server = startReceiverServer({ dir, port, host: '127.0.0.1' });
+    server = startReceiverServer({ dir, port: 0, host: '127.0.0.1' });
     await waitListening(server);
+    const port = listeningPort(server);
 
     const received: string[] = [];
     const sseReq = http.request(
@@ -410,9 +417,9 @@ describe('startReceiverServer', () => {
   });
 
   it('passes new fields (outcome/durationMs/async/level) through POST -> stream round-trip', async () => {
-    const port = randomPort();
-    server = startReceiverServer({ dir, port, host: '127.0.0.1' });
+    server = startReceiverServer({ dir, port: 0, host: '127.0.0.1' });
     await waitListening(server);
+    const port = listeningPort(server);
 
     const received: string[] = [];
     const sseReq = http.request(
@@ -467,9 +474,9 @@ describe('startReceiverServer', () => {
   });
 
   it('SSE replays the existing buffer on connect', async () => {
-    const port = randomPort();
-    server = startReceiverServer({ dir, port, host: '127.0.0.1' });
+    server = startReceiverServer({ dir, port: 0, host: '127.0.0.1' });
     await waitListening(server);
+    const port = listeningPort(server);
 
     await fetch(`http://127.0.0.1:${port}/__debug_log`, {
       method: 'POST',
@@ -497,9 +504,9 @@ describe('startReceiverServer', () => {
   });
 
   it('scopes round-trip over the wire (POST then GET)', async () => {
-    const port = randomPort();
-    server = startReceiverServer({ dir, port, host: '127.0.0.1', persistScopes: false });
+    server = startReceiverServer({ dir, port: 0, host: '127.0.0.1', persistScopes: false });
     await waitListening(server);
+    const port = listeningPort(server);
 
     const postRes = await fetch(`http://127.0.0.1:${port}/__debug_log/scopes`, {
       method: 'POST',
@@ -514,9 +521,9 @@ describe('startReceiverServer', () => {
   });
 
   it('POST /__tracelink/shutdown closes the server with an active SSE client', async () => {
-    const port = randomPort();
-    server = startReceiverServer({ dir, port, host: '127.0.0.1' });
+    server = startReceiverServer({ dir, port: 0, host: '127.0.0.1' });
     await waitListening(server);
+    const port = listeningPort(server);
 
     const stream = await fetch(`http://127.0.0.1:${port}/__debug_log/stream`);
     expect(stream.status).toBe(200);
@@ -535,9 +542,9 @@ describe('startReceiverServer', () => {
   });
 
   it('reuses an existing TraceLink receiver instead of double-binding', async () => {
-    const port = randomPort();
-    server = startReceiverServer({ dir, port, host: '127.0.0.1' });
+    server = startReceiverServer({ dir, port: 0, host: '127.0.0.1' });
     await waitListening(server);
+    const port = listeningPort(server);
 
     // Second start on the same port should detect "one of us" and reuse.
     const second = startReceiverServer({ dir, port, host: '127.0.0.1' });
@@ -546,5 +553,53 @@ describe('startReceiverServer', () => {
     await delay(400); // allow the async probe + reuse decision to settle
     expect(second.listening).toBe(false);
     expect(server.listening).toBe(true);
+  });
+
+  it('reuses a Receiver that reports a historical compatible protocol alias', async () => {
+    const legacy = http.createServer((_req, res) => {
+      res.setHeader('x-tracelink-receiver', '0.5.0');
+      res.end('{}');
+    });
+    extra.push(legacy);
+    legacy.listen(0, '127.0.0.1');
+    await waitListening(legacy);
+    const port = listeningPort(legacy);
+
+    const log = vi.spyOn(console, 'log').mockImplementation(() => {});
+    try {
+      const candidate = startReceiverServer({ dir, port, host: '127.0.0.1' });
+      extra.push(candidate);
+      await delay(400);
+
+      expect(candidate.listening).toBe(false);
+      expect(legacy.listening).toBe(true);
+      expect(log).toHaveBeenCalledWith(expect.stringContaining('compatible TraceLink protocol 0.5.0'));
+    } finally {
+      log.mockRestore();
+    }
+  });
+
+  it('does not reuse a TraceLink receiver with an incompatible protocol', async () => {
+    const legacy = http.createServer((_req, res) => {
+      res.setHeader('x-tracelink-receiver', 'legacy');
+      res.end('{}');
+    });
+    extra.push(legacy);
+    legacy.listen(0, '127.0.0.1');
+    await waitListening(legacy);
+    const port = listeningPort(legacy);
+
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      const candidate = startReceiverServer({ dir, port, host: '127.0.0.1' });
+      extra.push(candidate);
+      await delay(400);
+
+      expect(candidate.listening).toBe(false);
+      expect(legacy.listening).toBe(true);
+      expect(error).toHaveBeenCalledWith(expect.stringContaining('requires protocol'));
+    } finally {
+      error.mockRestore();
+    }
   });
 });

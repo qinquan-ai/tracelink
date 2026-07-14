@@ -3,6 +3,7 @@ import {
   existsSync,
   mkdirSync,
   mkdtempSync,
+  readFileSync,
   readdirSync,
   rmSync,
 } from 'node:fs';
@@ -11,6 +12,13 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const repoDir = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const protocolVersionSource = readFileSync(join(repoDir, 'protocol', 'version.ts'), 'utf8');
+const expectedProtocolVersion = protocolVersionSource.match(
+  /TRACE_PROTOCOL_VERSION\s*=\s*['"]([^'"]+)['"]/,
+)?.[1];
+if (!expectedProtocolVersion) {
+  throw new Error('Cannot read TRACE_PROTOCOL_VERSION from protocol/version.ts');
+}
 
 function run(command, args, cwd = repoDir) {
   const result = spawnSync(command, args, {
@@ -27,11 +35,22 @@ function run(command, args, cwd = repoDir) {
 function verifyBuiltEntries(packageDir, label) {
   const rootUrl = pathToFileURL(join(packageDir, 'dist', 'index.js')).href;
   const nodeUrl = pathToFileURL(join(packageDir, 'dist', 'node.js')).href;
+  const receiverUrl = pathToFileURL(join(packageDir, 'dist', 'receiver', 'http.js')).href;
   const code = `
     const root = await import(${JSON.stringify(rootUrl)});
     const node = await import(${JSON.stringify(nodeUrl)});
+    const receiver = await import(${JSON.stringify(receiverUrl)});
     if (root.tracer !== node.tracer) {
       throw new Error('root and node entries expose different tracer singletons');
+    }
+    if (root.TRACE_PROTOCOL_VERSION !== ${JSON.stringify(expectedProtocolVersion)}) {
+      throw new Error('root entry exposes an unexpected protocol generation');
+    }
+    if (receiver.TRACE_PROTOCOL_VERSION !== root.TRACE_PROTOCOL_VERSION) {
+      throw new Error('SDK and Receiver entries expose different protocol generations');
+    }
+    if (!root.isTraceProtocolCompatible('0.5.0') || !root.isTraceProtocolCompatible('0.4.0')) {
+      throw new Error('root entry does not expose historical protocol compatibility aliases');
     }
     root.tracer.configure({ consoleExporter: () => {} });
     root.tracer.clearMemory();

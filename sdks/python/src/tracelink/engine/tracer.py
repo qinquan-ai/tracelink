@@ -24,7 +24,7 @@ from ..runtime.context import (
 from ..transport.control.scope_sync import ScopeSync
 from ..transport.exporters.file import FileExporter
 from .sanitize import sanitize_data
-from .time import format_ts, make_span_id, make_trace_id, now_ms
+from .time import format_ts, make_span_id, make_trace_id, monotonic_ms, now_ms
 from .types import (
     BUILTIN_LAYERS,
     LayerMeta,
@@ -612,7 +612,7 @@ class Tracer:
             scope=resolved_scope,
             recording=recording,
         )
-        start = now_ms()
+        start = monotonic_ms()
 
         def emit_close(is_async: bool) -> None:
             if not recording:
@@ -621,7 +621,7 @@ class Tracer:
                 normalized_layer, fn, msg, data,
                 level=level, scope=resolved_scope, user_id=user_id,
                 parent_span_id=parent_span_id, _span_id=span_id, _trace_id=trace_id,
-                _duration_ms=now_ms() - start,
+                _duration_ms=monotonic_ms() - start,
                 _async=is_async,
                 _bypass_capture_gate=True,
             )
