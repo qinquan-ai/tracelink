@@ -9,7 +9,7 @@
  *
  * 重新生成流程（dashboard 改动后）：
  *   1) cd ../debug_board && npm run build:single   # 产出单文件 dist/index.html
- *   2) 回到 Trace_Link 根目录 && node scripts/embed-dashboard.mjs
+ *   2) 回到 TraceLink 仓库根目录 && node scripts/embed-dashboard.mjs
  *
  * 也可 `npm run embed:dashboard`（见 package.json scripts）。
  */
@@ -20,8 +20,8 @@ import { fileURLToPath } from 'node:url';
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const packageRoot = path.resolve(scriptDir, '..');
 
-// debug_board 与 Trace_Link 同为 debug_project 下的兄弟目录。
-// packageRoot 现在就是 Trace_Link 仓库根目录，故上跳一级即到 debug_project。
+// debug_board 与 TraceLink 私有开发目录同为 debug_project 下的兄弟目录。
+// packageRoot 是当前仓库根目录，故上跳一级即到 debug_project。
 const source = path.resolve(packageRoot, '../debug_board/dist/index.html');
 const destDir = path.join(packageRoot, 'dashboard');
 const dest = path.join(destDir, 'index.html');

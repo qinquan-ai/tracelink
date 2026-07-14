@@ -69,7 +69,7 @@ npm run verify:release
 ```
 
 该命令依次运行 TraceLink 完整门禁、Dashboard 类型检查、本地 tarball 物理安装、
-单文件 Dashboard 构建、嵌入 `Trace_Link/dashboard/index.html`，最后重新构建 npm 包。
+单文件 Dashboard 构建、嵌入仓库根目录的 `dashboard/index.html`，最后重新构建 npm 包。
 
 ## 5. Examples 不是 Tests
 

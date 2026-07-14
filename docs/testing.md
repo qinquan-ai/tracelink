@@ -78,7 +78,7 @@ npm run verify:release
 
 The command runs the complete TraceLink gate, Dashboard type checking, physical
 installation of a local tarball, the single-file Dashboard build, embedding
-into `Trace_Link/dashboard/index.html`, and finally rebuilds the npm package.
+into `dashboard/index.html` in the repository root, and finally rebuilds the npm package.
 
 ## 5. Examples Are Not Tests
 
