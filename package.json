@@ -1,6 +1,6 @@
 {
   "name": "tracelink",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "description": "Dev-time tracing toolkit with JavaScript SDK profiles, a local Receiver, and an embedded Dashboard",
   "type": "module",
   "main": "./dist/index.js",

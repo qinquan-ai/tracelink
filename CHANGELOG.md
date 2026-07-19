@@ -2,6 +2,11 @@
 
 This changelog starts with TraceLink's first public release. Development-only package names and unpublished iteration history are intentionally omitted.
 
+## 0.6.5 - 2026-07-19
+
+- Corrected the copyright holder name in the repository and Python package licenses.
+- Aligned the first npm and PyPI publications on the same product version.
+
 ## 0.6.4 - 2026-07-15
 
 - Localized the Dashboard About panel for Chinese users.
