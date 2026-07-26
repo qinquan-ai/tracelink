@@ -1,6 +1,7 @@
 /**
- * TraceLink AI-agent example — a realistic agent loop that instruments ITSELF
- * with TraceLink and showcases the complete wire feature set end-to-end:
+ * Cross-language TraceLog fixture using legacy agent-shaped labels to exercise
+ * the generic TraceLink span APIs and wire feature set end-to-end. TraceLink
+ * does not provide an AI-agent runtime or agent-specific tracing semantics:
  *
  *   - a top-level `agent.run` span with nested child spans
  *     (plan -> tool call -> sub-agent), proving auto span nesting via

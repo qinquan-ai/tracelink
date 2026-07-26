@@ -15,9 +15,9 @@ pip install tracelink
 pip install "tracelink[fastapi]"
 ```
 
-## 可选 AI Agent Skill
+## 可选 AI 编程助手 Skill
 
-PyPI 包只提供 Python SDK，不会安装仓库中的 AI Agent Skill。请使用
+PyPI 包只提供 Python SDK，不会安装仓库中的 AI 编程助手 Skill。请使用
 [Skills CLI](https://github.com/vercel-labs/skills) 单独安装：
 
 ```bash
@@ -26,6 +26,9 @@ npx skills add qinquan-ai/tracelink --skill tracelink
 
 CLI 会检测受支持的 AI Agent，并自动选择或提示选择安装目标。默认安装在当前项目；
 传入 `--global` 可让 Skill 在多个项目中使用。
+
+这个 Skill 用于帮助 AI 编程助手添加 TraceLink 埋点或分析已有调试数据，不提供
+AI Agent 运行时集成，也不增加面向 Agent 的专用追踪语义。
 
 ## 追踪与导出
 

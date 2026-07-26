@@ -234,10 +234,10 @@ SDK 连接 `/scopes/stream` SSE。连接后立即收到当前策略，后续只�
 ## 7. Layer、Scope 与 Outcome
 
 - `layer` 表示技术位置：`FE-ACTION`、`FE-API`、`BE-ENTRY`、`BE-DB` 等。
-- `scope` 表示业务范围：`checkout`、`delete-work`、`agent-run`。
+- `scope` 表示业务范围：`checkout`、`delete-work`、`upload-video`。
 - `outcome` 表示结果：缺省等价于 `call`，也可为 `blocked` 或 `intent`。
 - `blocked` / `intent` 的原因放在 `data.reason`，不增加顶层 `reason`。
-- 自定义 layer 使用 `X-*`，例如 `X-AI-INFERENCE`。
+- 自定义 layer 使用 `X-*`，例如 `X-CACHE`。
 
 ## 8. 新语言最小接入
 

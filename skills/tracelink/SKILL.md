@@ -1,6 +1,6 @@
 ---
 name: tracelink
-description: Add or inspect TraceLink dev-time tracing for requests, workflows, and AI-agent runs. Use when instrumenting spans, debugging real call chains, connecting JavaScript or Python SDKs to the local Receiver/Dashboard, propagating trace context across HTTP, controlling Scope collection, or implementing a TraceLink SDK/exporter in another language.
+description: Add or inspect TraceLink dev-time tracing for requests and application workflows. Use when instrumenting spans, debugging real call chains, connecting JavaScript or Python SDKs to the local Receiver/Dashboard, propagating trace context across HTTP, controlling Scope collection, analyzing existing trace data, or implementing a TraceLink SDK/exporter in another language.
 ---
 
 # TraceLink
@@ -19,7 +19,7 @@ searchable, fail-safe, and disabled in production.
 4. Register an HTTP Exporter that targets the Receiver. In Python, pass
    `file_enabled=False` when a Receiver in the same project owns `.tracelink/`.
 5. Add spans at meaningful boundaries: user action, request entry, service call,
-   database operation, tool call, guardrail, or background task.
+   database operation, external API, validation decision, or background task.
 6. Propagate context on business HTTP requests when crossing processes.
 7. Reproduce once, then inspect by `scope`, `traceId`, and `parentSpanId`.
 8. Run the host project's existing tests/build; tracing failures must not alter behavior.
@@ -91,6 +91,9 @@ Do not implement periodic polling unless a target runtime cannot consume SSE.
 - The Receiver cannot infer parents from event arrival order.
 - An unsupported language may begin with a minimal HTTP exporter, but automatic
   nesting requires that language's native context mechanism.
+- This Skill lets a coding assistant add instrumentation or analyze trace data.
+  It does not imply that TraceLink provides an AI-agent runtime or
+  agent-specific tracing semantics.
 
 ## References
 

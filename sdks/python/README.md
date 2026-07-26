@@ -16,10 +16,10 @@ pip install tracelink
 pip install "tracelink[fastapi]"
 ```
 
-## Optional AI Agent Skill
+## Optional Coding-Assistant Skill
 
 The PyPI package provides the Python SDK but does not install the repository's
-AI Agent Skill. Install that separately with the
+coding-assistant Skill. Install that separately with the
 [Skills CLI](https://github.com/vercel-labs/skills):
 
 ```bash
@@ -29,6 +29,10 @@ npx skills add qinquan-ai/tracelink --skill tracelink
 The CLI detects supported AI agents and either selects or prompts for the
 installation target. Installation is project-local by default; pass `--global`
 to make the skill available across projects.
+
+The Skill helps a coding assistant add TraceLink instrumentation and analyze
+existing debug data. It does not provide AI-agent runtime integration or
+agent-specific tracing semantics.
 
 ## Trace And Export
 

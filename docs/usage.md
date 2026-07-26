@@ -243,10 +243,10 @@ disconnect it retains the last policy and reconnects without fixed polling.
 ## 7. Layer, Scope, and Outcome
 
 - `layer` describes the technical position: `FE-ACTION`, `FE-API`, `BE-ENTRY`, `BE-DB`, and others.
-- `scope` describes the business boundary: `checkout`, `delete-work`, or `agent-run`.
+- `scope` describes the business boundary: `checkout`, `delete-work`, or `upload-video`.
 - `outcome` describes the result: missing means `call`; explicit values include `blocked` and `intent`.
 - Reasons for `blocked` / `intent` live in `data.reason`; there is no top-level `reason`.
-- Custom layers use `X-*`, for example `X-AI-INFERENCE`.
+- Custom layers use `X-*`, for example `X-CACHE`.
 
 ## 8. Minimal Integration for a New Language
 

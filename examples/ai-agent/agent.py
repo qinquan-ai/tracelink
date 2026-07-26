@@ -1,8 +1,9 @@
-"""TraceLink AI-agent example — Python edition.
+"""Cross-language TraceLog fixture using legacy agent-shaped labels.
 
-The Python twin of `agent.mjs`. A realistic agent loop that **instruments
-itself** with TraceLink and showcases the complete wire feature set end-to-end,
-POSTing into the SAME standalone receiver + dashboard the Node agent feeds:
+The Python twin of `agent.mjs` exercises the generic TraceLink span APIs and
+wire feature set end-to-end. TraceLink does not provide an AI-agent runtime or
+agent-specific tracing semantics. The fixture posts into the same standalone
+Receiver and Dashboard as the Node fixture:
 
   - a top-level `agent.run` span with nested child spans
     (plan -> search tool -> sub-agent -> summarize tool), proving auto span

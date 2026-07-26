@@ -2,9 +2,10 @@
 
 [简体中文文档](https://github.com/qinquan-ai/tracelink/blob/main/README.zh-CN.md)
 
-Local dev-time tracing for real requests, workflows, and AI-agent runs. The npm
-package contains the JavaScript SDK, language-neutral protocol assets, local
-Receiver, CLI, and embedded Dashboard.
+Local dev-time tracing for real requests and application workflows. TraceLink
+uses explicit instrumentation to reconstruct actual call paths. The npm package
+contains the JavaScript SDK, language-neutral protocol assets, local Receiver,
+CLI, and embedded Dashboard.
 
 ## Install And Run
 
@@ -13,9 +14,9 @@ npm install tracelink
 npx tracelink dashboard
 ```
 
-## Optional AI Agent Skill
+## Optional Coding-Assistant Skill
 
-The npm package does not copy the repository's AI Agent Skill into an
+The npm package does not copy the repository's coding-assistant Skill into an
 agent-specific directory. Install it separately with the
 [Skills CLI](https://github.com/vercel-labs/skills):
 
@@ -26,6 +27,10 @@ npx skills add qinquan-ai/tracelink --skill tracelink
 The CLI detects supported AI agents and either selects or prompts for the
 installation target. Installation is project-local by default; pass `--global`
 to make the skill available across projects.
+
+The Skill helps a coding assistant add TraceLink instrumentation and analyze
+existing debug data. It does not add an AI-agent runtime or agent-specific
+tracing semantics to TraceLink.
 
 ## Node
 
@@ -40,11 +45,11 @@ tracer.addExporter(exporter.send.bind(exporter));
 
 await tracer.span({
   layer: 'BE-ENTRY',
-  fn: 'agent.ts:run',
-  msg: 'agent run',
-  scope: 'agent-run',
+  fn: 'orders.ts:create',
+  msg: 'create order',
+  scope: 'checkout',
 }, async () => {
-  tracer.custom('X-TOOL', 'tools.ts:search', 'search');
+  tracer.custom('X-CACHE', 'cache.ts:get', 'read cart cache');
 });
 ```
 

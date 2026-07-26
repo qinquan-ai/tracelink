@@ -2,6 +2,15 @@
 
 This changelog starts with TraceLink's first public release. Development-only package names and unpublished iteration history are intentionally omitted.
 
+## 0.6.6 - 2026-07-26
+
+- Clarified that TraceLink instruments application requests and workflows rather
+  than providing an AI-agent runtime or agent-specific tracing semantics.
+- Positioned AI coding assistants as optional consumers that can help add
+  instrumentation or analyze the resulting local debug data.
+- Updated the Dashboard About panel, package metadata, usage examples, and
+  cross-language fixture documentation to use the same product boundary.
+
 ## 0.6.5 - 2026-07-19
 
 - Corrected the copyright holder name in the repository and Python package licenses.
@@ -51,11 +60,11 @@ First installable public release from the clean `qinquan-ai/tracelink` repositor
 - Log table, PixiJS live call graph, Canvas 2D timeline, and SVG call-chain map.
 - Trace filtering, time association, node dragging, layout reset, and SVG export.
 
-### AI Agent Support
+### Coding-Assistant Integration And Generic Outcomes
 
-- Installable TraceLink Skill with instrumentation and diagnosis guidance.
-- Explicit `blocked` and `intent` outcomes for guardrails and skipped actions.
-- Cross-language AI-agent example covering Node and Python SDKs.
+- Installable TraceLink Skill for coding-assistant instrumentation and trace analysis.
+- Explicit `blocked` and `intent` outcomes for denied and planned actions.
+- Cross-language fixture covering nested Node and Python spans.
 
 ### Development And Release
 

@@ -2,8 +2,9 @@
 
 English | [简体中文](./README.zh-CN.md)
 
-TraceLink is a local, dev-time tracing toolkit for reconstructing how a real
-request, workflow, or AI-agent run moved through an application.
+TraceLink is a local, dev-time tracing toolkit that uses explicit
+instrumentation to reconstruct how a real request or application workflow
+moved through an application.
 
 It ships:
 
@@ -11,7 +12,8 @@ It ships:
 - A language-neutral protocol with JSON Schema and golden fixtures.
 - One local Receiver for ingest, NDJSON persistence, SSE streaming, and Scope control.
 - An embedded Dashboard with logs, a PixiJS live call graph, an SVG call-chain map, and a timeline.
-- An AI Agent Skill for instrumenting and inspecting a trace.
+- An optional coding-assistant Skill for adding instrumentation and analyzing
+  existing trace data.
 
 Tracing is fail-safe by design: an exporter, control stream, or Dashboard failure
 must not change application behavior.
@@ -49,10 +51,10 @@ pip install "tracelink[fastapi]"   # optional FastAPI/Starlette extension
 ```
 
 The npm package provides the JavaScript SDK, Receiver, and Dashboard. The PyPI
-package provides the Python SDK. Neither package installs the optional AI Agent
-Skill into an agent's skill directory.
+package provides the Python SDK. Neither package installs the optional
+coding-assistant Skill into an agent's skill directory.
 
-## Install The AI Agent Skill
+## Install The Coding-Assistant Skill
 
 Install the repository's `tracelink` skill separately with the
 [Skills CLI](https://github.com/vercel-labs/skills):
@@ -65,6 +67,11 @@ The CLI detects supported AI agents and either selects or prompts for the
 installation target. Installation is project-local by default; pass `--global`
 to make the skill available across projects. npm and pip never copy the skill
 into an agent-specific directory automatically.
+
+This Skill helps a coding assistant add TraceLink instrumentation and inspect
+the resulting debug data. TraceLink does not provide an AI-agent runtime or
+agent-specific tracing semantics; AI is an optional consumer of the same trace
+data available to developers.
 
 ## Start The Dashboard
 
@@ -221,8 +228,7 @@ npm run verify:release
 - [Detailed usage](./docs/usage.md)
 - [Testing and release gates](./docs/testing.md)
 - [Protocol and SDK conformance](./protocol/CONFORMANCE.md)
-- [AI Agent Skill](./skills/tracelink/SKILL.md)
-- [Cross-language AI-agent example](./examples/ai-agent/README.md)
+- [Coding-assistant Skill](./skills/tracelink/SKILL.md)
 - [Python SDK guide](./sdks/python/README.md)
 
 ## Security

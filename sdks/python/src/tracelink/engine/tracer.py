@@ -348,12 +348,12 @@ class Tracer:
     # =========================================================================
 
     def register_layer(self, name: str, meta: LayerMeta) -> None:
-        """Register a custom layer. Optional but recommended for AI agent readability.
+        """Register a custom layer. Optional but recommended for trace readability.
 
         Example:
-            tracer.register_layer("X-AI-INFERENCE", {
-                "description": "LLM call to OpenAI",
-                "color": "#aa88ff",
+            tracer.register_layer("X-CACHE", {
+                "description": "Application cache access",
+                "color": "#88aaff",
             })
 
         Built-in layers (FE-*/BE-*) reject registration overrides.

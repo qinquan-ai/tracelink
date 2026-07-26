@@ -1,10 +1,14 @@
-# Cross-Language AI Agent Example
+# Cross-Language Trace Fixture
 
 English | [简体中文](./README.zh-CN.md)
 
-The Node and Python examples emit nested agent/tool spans into one Receiver.
-They demonstrate shared `TraceLog` fields, automatic in-process parent links,
-durations, async spans, and explicit `blocked` / `intent` outcomes.
+The Node and Python fixtures emit nested spans into one Receiver. They use
+agent-shaped labels only to exercise shared `TraceLog` fields, automatic
+in-process parent links, durations, async spans, and explicit `blocked` /
+`intent` outcomes.
+
+TraceLink has no AI-agent runtime or agent-specific tracing semantics. These
+fixtures exercise the same generic span APIs used by ordinary application code.
 
 ```bash
 # repository root

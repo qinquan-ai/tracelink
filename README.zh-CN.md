@@ -2,7 +2,7 @@
 
 [English](./README.md) | 简体中文
 
-TraceLink 是一套用于本地开发期追踪的工具，可还原真实请求、工作流或 AI Agent 运行过程在应用中的实际调用路径。
+TraceLink 是一套用于本地开发期追踪的工具，通过显式埋点还原真实请求或业务工作流在应用中的实际调用路径。
 
 它包含：
 
@@ -10,7 +10,7 @@ TraceLink 是一套用于本地开发期追踪的工具，可还原真实请求�
 - 与语言无关的协议，包括 JSON Schema 和 golden fixtures。
 - 一个本地 Receiver，负责事件接收、NDJSON 持久化、SSE 推送和 Scope 控制。
 - 一个内嵌 Dashboard，包括日志、PixiJS 实时调用图、SVG 调用链导图和时间线。
-- 一个用于添加追踪和检查链路的 AI Agent Skill。
+- 一个可选的 AI 编程助手 Skill，用于辅助添加埋点和分析已有调试数据。
 
 TraceLink 采用故障安全设计：Exporter、控制流或 Dashboard 发生故障时，不得改变应用本身的行为。
 
@@ -40,9 +40,9 @@ pip install tracelink
 pip install "tracelink[fastapi]"   # 可选的 FastAPI/Starlette 扩展
 ```
 
-npm 包提供 JavaScript SDK、Receiver 和 Dashboard；PyPI 包提供 Python SDK。二者都不会把可选的 AI Agent Skill 自动安装到 Agent 的 Skill 目录。
+npm 包提供 JavaScript SDK、Receiver 和 Dashboard；PyPI 包提供 Python SDK。二者都不会把可选的 AI 编程助手 Skill 自动安装到 Agent 的 Skill 目录。
 
-## 安装 AI Agent Skill
+## 安装 AI 编程助手 Skill
 
 使用 [Skills CLI](https://github.com/vercel-labs/skills) 单独安装仓库中的 `tracelink` Skill：
 
@@ -51,6 +51,8 @@ npx skills add qinquan-ai/tracelink --skill tracelink
 ```
 
 CLI 会检测受支持的 AI Agent，并自动选择或提示选择安装目标。默认安装在当前项目；传入 `--global` 可让 Skill 在多个项目中使用。npm 和 pip 都不会自动把 Skill 复制到某个 Agent 专用目录。
+
+这个 Skill 只用于帮助 AI 编程助手添加 TraceLink 埋点或分析生成后的调试数据。TraceLink 不提供 AI Agent 运行时，也没有面向 Agent 的专用追踪语义；AI 只是调试数据的可选分析者之一。
 
 ## 启动 Dashboard
 
@@ -192,8 +194,7 @@ npm run verify:release
 - [详细用法](./docs/usage.zh-CN.md)
 - [测试和发布门禁](./docs/testing.zh-CN.md)
 - [Protocol 和 SDK 一致性（英文权威版）](./protocol/CONFORMANCE.md)
-- [AI Agent Skill](./skills/tracelink/SKILL.md)
-- [跨语言 AI Agent 示例](./examples/ai-agent/README.zh-CN.md)
+- [AI 编程助手 Skill](./skills/tracelink/SKILL.md)
 - [Python SDK 指南](./sdks/python/README.zh-CN.md)
 
 ## 安全

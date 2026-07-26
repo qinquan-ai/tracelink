@@ -103,7 +103,7 @@ class Tracer {
   /**
    * Layer registry — maps an `X-*` name to a human-readable description and
    * a console color hint. Registry entries are advisory only (they show up
-   * in summaries and help AI agents disambiguate); they do NOT restrict
+   * in summaries and help automated analysis disambiguate); they do NOT restrict
    * which layer names can be emitted. This is by design — see
    * the protocol conformance contract.
    */
@@ -255,7 +255,7 @@ class Tracer {
   // ============================================================================
 
   /**
-   * Register a custom layer. Optional but recommended for AI agent readability.
+   * Register a custom layer. Optional but recommended for trace readability.
    * See the protocol conformance contract for the namespace rules.
    *
    *   tracer.registerLayer('X-RENDER', {

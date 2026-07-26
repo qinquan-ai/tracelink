@@ -1,10 +1,13 @@
-# 跨语言 AI Agent 示例
+# 跨语言 Trace 测试样例
 
 [English](./README.md) | 简体中文
 
-Node 和 Python 示例会向同一个 Receiver 发送嵌套的 Agent/工具 span。它们展示了
-共享的 `TraceLog` 字段、进程内自动父子关系、耗时、异步 span，以及显式的
-`blocked` / `intent` outcome。
+Node 和 Python 测试样例会向同一个 Receiver 发送嵌套 span。样例沿用 Agent 形态的
+标签，只用于覆盖共享的 `TraceLog` 字段、进程内自动父子关系、耗时、异步 span，
+以及显式的 `blocked` / `intent` outcome。
+
+TraceLink 不提供 AI Agent 运行时或面向 Agent 的专用追踪语义；这些样例使用的仍是
+普通应用代码共用的通用 span API。
 
 ```bash
 # 仓库根目录
